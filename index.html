@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYBER COMMAND CENTER</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #05090b;
+  color: #00ff88;
+  font-family: Consolas, monospace;
+}
+
+header {
+  padding: 22px;
+  border-bottom: 1px solid #00ff8855;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 0 0 15px #00ff88;
+}
+
+.status { color: #00ff88; }
+
+.container {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  gap: 18px;
+}
+
+.panel {
+  background: #091310;
+  border: 1px solid #00ff8844;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00ff8810;
+}
+
+h2 {
+  font-size: 16px;
+  color: #00ff88;
+}
+
+.big {
+  font-size: 27px;
+  margin: 15px 0;
+}
+
+button {
+  background: #00ff88;
+  color: #00150b;
+  border: none;
+  padding: 11px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  margin: 5px 0;
+}
+
+button:hover { background: white; }
+
+input {
+  width: 100%;
+  background: black;
+  color: #00ff88;
+  border: 1px solid #00ff88;
+  padding: 12px;
+  margin: 8px 0;
+}
+
+.terminal {
+  height: 260px;
+  overflow-y: auto;
+  background: black;
+  padding: 12px;
+  color: #00ff88;
+  font-size: 13px;
+}
+
+.line { margin: 7px 0; }
+
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #557766;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">⚡ CYBER COMMAND CENTER</div>
+  <div class="status">● SYSTEM ONLINE</div>
+</header>
+
+<div class="container">
+
+  <section class="panel">
+    <h2>01 / SYSTEM STATUS</h2>
+    <p>Laboratoriya holati</p>
+    <div class="big">ONLINE</div>
+    <p>Mode: SAFE DEMO</p>
+    <p id="clock">00:00:00</p>
+  </section>
+
+  <section class="panel">
+    <h2>02 / CPU MONITOR</h2>
+    <p>Demo CPU yuklanishi</p>
+    <div class="big" id="cpu">24%</div>
+    <button onclick="updateCPU()">Yangilash</button>
+  </section>
+
+  <section class="panel">
+    <h2>03 / NETWORK MONITOR</h2>
+    <p>Simulyatsiya qilingan tarmoq holati</p>
+    <div class="big" id="network">CONNECTED</div>
+    <p>Real hujum yoki skanerlash yo‘q.</p>
+  </section>
+
+  <section class="panel">
+    <h2>04 / PASSWORD CHECKER</h2>
+    <input id="password" type="password"
+      placeholder="Parolni kiriting">
+    <button onclick="checkPassword()">Tekshirish</button>
+    <p id="passwordResult">Natija shu yerda chiqadi.</p>
+  </section>
+
+  <section class="panel">
+    <h2>05 / SECURITY SCANNER</h2>
+    <p>Mahalliy demo xavfsizlik tekshiruvi</p>
+    <button onclick="scan()">SCAN SYSTEM</button>
+    <div id="scanResult">Tekshiruv hali boshlanmadi.</div>
+  </section>
+
+  <section class="panel">
+    <h2>06 / CYBER TERMINAL</h2>
+    <div class="terminal" id="terminal">
+      <div class="line">CYBER COMMAND CENTER v1.0</div>
+      <div class="line">Xavfsiz demo terminal.</div>
+      <div class="line">Yordam uchun: help</div>
+    </div>
+
+    <input id="command" placeholder="Buyruq yozing..."
+      onkeydown="if(event.key==='Enter')runCommand()">
+    <button onclick="runCommand()">EXECUTE</button>
+  </section>
+
+</div>
+
+<footer>
+  CYBER COMMAND CENTER | EDUCATIONAL SECURITY LAB
+</footer>
+
+<script>
+
+function updateClock() {
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+function updateCPU() {
+  let value = Math.floor(Math.random()*70)+10;
+  document.getElementById("cpu").textContent = value+"%";
+}
+
+function checkPassword() {
+  let p = document.getElementById("password").value;
+  let result = document.getElementById("passwordResult");
+
+  if (!p) {
+    result.textContent = "Avval parol kiriting.";
+  } else if (p.length < 8) {
+    result.textContent = "ZAIF: kamida 8 ta belgi ishlating.";
+  } else if (!/[A-Z]/.test(p) ||
+             !/[0-9]/.test(p) ||
+             !/[^A-Za-z0-9]/.test(p)) {
+    result.textContent =
+      "O'RTA: katta harf, raqam va maxsus belgi qo'shing.";
+  } else {
+    result.textContent = "YAXSHI: parol murakkab ko'rinadi.";
+  }
+}
+
+function scan() {
+  let result = document.getElementById("scanResult");
+  result.textContent = "Demo tekshiruv bajarilmoqda...";
+
+  setTimeout(() => {
+    result.textContent =
+      "DEMO COMPLETE: laboratoriya ishlayapti. " +
+      "Bu haqiqiy kompyuter skaneri emas.";
+  }, 1500);
+}
+
+function runCommand() {
+  let input = document.getElementById("command");
+  let terminal = document.getElementById("terminal");
+  let cmd = input.value.trim().toLowerCase();
+
+  if (!cmd) return;
+
+  let output = "";
+
+  if (cmd === "help") {
+    output = "Buyruqlar: help, about, status, clear, time";
+  } else if (cmd === "about") {
+    output = "CYBER COMMAND CENTER - Safe Cyber Lab";
+  } else if (cmd === "status") {
+    output = "SYSTEM ONLINE | SAFE DEMO MODE";
+  } else if (cmd === "time") {
+    output = new Date().toLocaleString();
+  } else if (cmd === "clear") {
+    terminal.innerHTML = "";
+    input.value = "";
+    return;
+  } else {
+    output = "Noma'lum buyruq. help yozing.";
+  }
+
+  let line = document.createElement("div");
+  line.className = "line";
+  line.textContent = "> " + cmd + " : " + output;
+  terminal.appendChild(line);
+
+  input.value = "";
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+</script>
+
+</body>
+</html>
